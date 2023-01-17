@@ -1,4 +1,5 @@
-from django.shortcuts import render
+from django.shortcuts import render , get_object_or_404
+from django.http import HttpResponse 
 from django.views.generic import ListView , DetailView , TemplateView 
 from django.contrib.auth.views import LoginView
 # Models
@@ -35,6 +36,23 @@ class UserLoginView(LoginView):
     success_url = "index"
 
 
+class CategoryFilterView(BlogListView):
+    BlogListView.template_name  = "components/filter/category.html"
+
+    def get_context_data(self, **kwargs) :
+        context = super().get_context_data(**kwargs)
+        category = get_object_or_404(Category, slug = self.kwargs.get('slug'))
+        context['blogs'] = category.blog_category.all()
+        return context
+
+class TagsFilterView(BlogListView):
+    BlogListView.template_name='components/filter/tags_filter.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        tags = get_object_or_404(Tags, slug=self.kwargs.get('slug'))
+        context['blogs'] = tags.blog_set.all()
+        return context
+        
 
 
-           

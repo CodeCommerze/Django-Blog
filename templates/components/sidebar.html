@@ -16,7 +16,7 @@
             <div class="content">
               <ul>
                 {% for blog in blogs %}
-                <li><a href="post-details.html">
+                <li><a href="{% url 'blog_details' blog.slug %}">
                   <h5>{{blog.name}}</h5>
                   <span>{{blog.created}}</span>
                 </a></li>
@@ -33,7 +33,7 @@
             <div class="content">
               <ul>
                 {% for category in categories %}
-                <li><a href="#">-{{category.name}}</a></li>
+                <li><a href="{% url 'category_filter' category.slug %}">-{{category.name}}</a></li>
                 {% endfor %}
               </ul>
             </div>
@@ -47,7 +47,7 @@
             <div class="content">
               <ul>
                 {% for tag in tags  %}
-                <li><a href="#">{{tag.name}}</a></li>
+                <li><a href="{% url 'tags_filter' tag.slug %}">{{tag.name}}</a></li>
                 {% endfor %}
               </ul>
             </div>

@@ -51,3 +51,13 @@ class Blog(models.Model):
         self.slug = slugify(self.name)
         return super().save(*args, **kwargs)
     
+
+class Coomment(models.Model):
+    user = models.ForeignKey(User , on_delete=models.CASCADE)
+    blog = models.ForeignKey(Blog, on_delete=models.CASCADE)
+    commtent = models.TextField()
+    created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return  self.user.username
+
