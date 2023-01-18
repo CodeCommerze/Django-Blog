@@ -1,7 +1,10 @@
-from django.shortcuts import render , get_object_or_404
+from django.shortcuts import render , get_object_or_404 ,redirect 
+from django.urls import reverse
 from django.http import HttpResponse 
-from django.views.generic import ListView , DetailView , TemplateView 
+from django.views.generic import ListView , DetailView , TemplateView
+from django.views.generic.edit import CreateView ,FormView
 from django.contrib.auth.views import LoginView
+from .forms import CommentForm , ReplayForm 
 # Models
 from blog.models import *
 
@@ -25,15 +28,49 @@ class BlogListView(ListView):
     template_name = 'blog.html'
    
 
-class BlogDetailsView(DetailView):
+class BlogDetailsView(DetailView , ):
     model=Blog
     template_name = "blog_details.html"
     context_object_name = "blog"
+    slug_field = 'slug'
+    form = CommentForm
+
+    # For geetting context 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'] = self.form
+        return context
+
+    # for post request and 
+    def post(self, request,  **kwargs):
+        form = CommentForm(request.POST)
+        if form.is_valid():
+           comment = Comment.objects.create(
+                user = request.user ,
+                blog = self.get_object(),
+                comment = form.cleaned_data['text']
+            )
+           comment.save()
+        return redirect(reverse("blog_details", kwargs={'slug':kwargs['slug']}))
+
+class ReplayView(FormView):
+    def post(self, request ,  **kwargs):
+        form = ReplayForm(request.POST)
+        comment = get_object_or_404(Comment , pk=self.kwargs['comment_id'])
+        print(kwargs['comment_id'])
+        if form.is_valid():
+            user_replay = Replay.objects.create(
+                user = request.user,
+                comment=comment,
+                text = form.cleaned_data.get('text')        
+                )
+            user_replay.save()
+        return redirect(reverse("blog_details", kwargs={'slug':kwargs['blog_slug']}))
+
+        
 
 
-class UserLoginView(LoginView):
-    template_name = 'contact.html'
-    success_url = "index"
+
 
 
 class CategoryFilterView(BlogListView):
@@ -53,6 +90,12 @@ class TagsFilterView(BlogListView):
         tags = get_object_or_404(Tags, slug=self.kwargs.get('slug'))
         context['blogs'] = tags.blog_set.all()
         return context
-        
+
+
+    
+
+
+
+
 
 

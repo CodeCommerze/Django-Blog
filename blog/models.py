@@ -52,12 +52,21 @@ class Blog(models.Model):
         return super().save(*args, **kwargs)
     
 
-class Coomment(models.Model):
-    user = models.ForeignKey(User , on_delete=models.CASCADE)
-    blog = models.ForeignKey(Blog, on_delete=models.CASCADE)
-    commtent = models.TextField()
+class Comment(models.Model):
+    user = models.ForeignKey(User , on_delete=models.CASCADE , related_name="user_comment")
+    blog = models.ForeignKey(Blog, on_delete=models.CASCADE , related_name="blog_comment")
+    comment = models.TextField()
     created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return  self.user.username
+
+class Replay(models.Model):
+    user = models.ForeignKey(User, related_name="replay_user" , on_delete=models.CASCADE)
+    comment = models.ForeignKey(Comment , verbose_name= "Comment", related_name='replay_comment' , on_delete=models.CASCADE)
+    text = models.CharField(max_length=255 , verbose_name="Replay")
+    created = models.DateTimeField(auto_now_add=True)
+    def __str__(self):
+        return self.user.username
+
 

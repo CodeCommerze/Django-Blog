@@ -18,11 +18,11 @@
                     </div>
                     <div class="down-content">
                       <span>{{blog.Category}}</span>
-                      <a href="post-details.html"><h4>{{blog.name}}</h4></a>
+                      <a ><h4>{{blog.name}}</h4></a>
                       <ul class="post-info">
                         <li><a href="#">{{blog.author}}</a></li>
                         <li><a href="#">{{blog.created}}</a></li>
-                        <li><a href="#">10 Comments</a></li>
+                        <li><a href="#">{{blog.blog_comment.count}} Comments</a></li>
                       </ul>
                       <p>{{blog.description}}</p>
                       <div class="post-options">
@@ -51,46 +51,57 @@
                 <div class="col-lg-12">
                   <div class="sidebar-item comments">
                     <div class="sidebar-heading">
-                      <h2>4 comments</h2>
+                      <h2>{{blog.blog_comment.count}} comments</h2>
                     </div>
                     <div class="content">
                       <ul>
+                        {% for comment  in blog.blog_comment.all  %}
                         <li>
                           <div class="author-thumb">
-                            <img src="assets/images/comment-author-01.jpg" alt="">
+                            {% for picture in  comment.user.profile_user.all %}
+                            <img src="{{picture.get_profile_picture}}" alt="{{picture.user.username}}">
+                            {% endfor %}
                           </div>
                           <div class="right-content">
-                            <h4>Charles Kate<span>May 16, 2020</span></h4>
-                            <p>Fusce ornare mollis eros. Duis et diam vitae justo fringilla condimentum eu quis leo. Vestibulum id turpis porttitor sapien facilisis scelerisque. Curabitur a nisl eu lacus convallis eleifend posuere id tellus.</p>
+                            <h4>{{comment.user.username}}<span>{{comment.created}}</span></h4>
+                            <p>{{comment.comment}}</p>
+                            <div class="content">
+                              <form id="comment" action="{% url 'replay' blog.slug comment.pk %}" method="post">
+                                {% csrf_token %}
+                                <div class="row">
+                                  <div class="col-lg-12">
+                                    <fieldset>
+                                      <textarea name="text" rows="6" id="message" placeholder="Type your replay" required="" style="    height: 81px; width: 30rem"></textarea>
+                                    </fieldset>
+                                  </div>
+                                  <div class="col-lg-12">
+                                    <fieldset>
+                                      {% if request.user.is_authenticated %}
+                                      <button type="submit" id="form-submit" class="main-button" >Submit</button>
+                                      {% else %}
+                                      <button type="button" id="form-submit" class="main-button">Login</button>
+                                      {% endif %}
+                                    </fieldset>
+                                  </div>
+                                </div>
+                              </form>
+                            </div>
                           </div>
                         </li>
+                        {% for replay in comment.replay_comment.all  %}
                         <li class="replied">
                           <div class="author-thumb">
-                            <img src="assets/images/comment-author-02.jpg" alt="">
+                            {% for picture in  replay.user.profile_user.all %}
+                            <img src="{{picture.get_profile_picture}}" alt="">
+                            {% endfor %}
                           </div>
                           <div class="right-content">
-                            <h4>Thirteen Man<span>May 20, 2020</span></h4>
-                            <p>In porta urna sed venenatis sollicitudin. Praesent urna sem, pulvinar vel mattis eget.</p>
+                            <h4>{{replay.user.username}}<span>{{replay.created}}</span></h4>
+                            <p>{{replay.text}}</p>
                           </div>
                         </li>
-                        <li>
-                          <div class="author-thumb">
-                            <img src="assets/images/comment-author-03.jpg" alt="">
-                          </div>
-                          <div class="right-content">
-                            <h4>Belisimo Mama<span>May 16, 2020</span></h4>
-                            <p>Nullam nec pharetra nibh. Cras tortor nulla, faucibus id tincidunt in, ultrices eget ligula. Sed vitae suscipit ligula. Vestibulum id turpis volutpat, lobortis turpis ac, molestie nibh.</p>
-                          </div>
-                        </li>
-                        <li class="replied">
-                          <div class="author-thumb">
-                            <img src="assets/images/comment-author-02.jpg" alt="">
-                          </div>
-                          <div class="right-content">
-                            <h4>Thirteen Man<span>May 22, 2020</span></h4>
-                            <p>Mauris sit amet justo vulputate, cursus massa congue, vestibulum odio. Aenean elit nunc, gravida in erat sit amet, feugiat viverra leo.</p>
-                          </div>
-                        </li>
+                        {% endfor %}
+                        {% endfor %}
                       </ul>
                     </div>
                   </div>
@@ -101,19 +112,20 @@
                       <h2>Your comment</h2>
                     </div>
                     <div class="content">
-                      <form id="comment" action="#" method="post">
+                      <form id="comment" action="{% url 'blog_details' slug=blog.slug %}" method="post">
+                        {% csrf_token %}
                         <div class="row">
                           <div class="col-lg-12">
                             <fieldset>
-                              <textarea name="message" rows="6" id="message" placeholder="Type your comment" required="" style="height:81px"></textarea>
+                              <textarea name="text" rows="6" id="message" placeholder="Type your comment" required="" style="height:81px"></textarea>
                             </fieldset>
                           </div>
                           <div class="col-lg-12">
                             <fieldset>
                               {% if request.user.is_authenticated %}
-                              <button type="submit" id="form-submit" class="main-button">Submit</button>
+                              <button type="submit" id="form-submit" class="main-button" >Submit</button>
                               {% else %}
-                              <button type="submit" id="form-submit" class="main-button">Login</button>
+                              <button type="button" id="form-submit" class="main-button">Login</button>
                               {% endif %}
                             </fieldset>
                           </div>

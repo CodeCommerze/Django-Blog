@@ -1091,3 +1091,10 @@ footer p a:hover {
 		margin-top: 60px;
 	}
 }
+
+button#form-submit {
+    border: 1px solid #fff;
+    padding: 10px 34px;
+    background: #F48840;
+    color: #fff;
+}

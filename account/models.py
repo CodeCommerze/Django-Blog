@@ -19,8 +19,14 @@ class Profile(models.Model):
     
     def __str__(self):
         return self.user.username
-    
-
+        
+    def get_profile_picture(self):
+            url = ''
+            try:
+                url=self.image.url
+            except:
+                url = '/static/assets/images/default.jpg'
+            return url
 
 
 
