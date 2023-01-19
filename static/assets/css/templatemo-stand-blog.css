@@ -990,6 +990,18 @@ footer p a:hover {
 }
 
 
+#replay {
+	width: 100%;
+	height: 85px;
+}
+.default-color{
+	color: #F48840 !important ;
+}
+.heart-color {
+	color: #cdcdcd !important;
+  }
+
+
 /* Responsive Style */
 @media (max-width: 1250px) {
 	.owl-banner .owl-nav .owl-prev {
@@ -1012,6 +1024,10 @@ footer p a:hover {
 	.owl-banner .owl-nav {
 		display: none;
 	}
+	#replay {
+		width: 13rem;
+		height: 65px;
+	  }
 }
 
 @media (max-width: 992px) {
@@ -1098,3 +1114,4 @@ button#form-submit {
     background: #F48840;
     color: #fff;
 }
+

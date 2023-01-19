@@ -36,7 +36,17 @@
                           </div>
                           <div class="col-6">
                             <ul class="post-share">
-                              <li><i class="fa fa-heart"></i></li>
+                              <li id='like-count'>{{blog.likes.count}}</li>
+                              {% if request.user.is_authenticated %}
+                              {% if liked %}
+                              <li><i  id='like-icon' data-blog="{{blog.id}}"class="fa fa-heart heart-color"></i></li>
+                              {% else %}
+                              <li><i  id='like-icon' data-blog="{{blog.id}}"class="fa fa-heart default-color"></i></li>
+                              {% endif %}
+                              {% else %}
+                              <li><i  class="fa fa-heart heart-color"></i></li>
+                              {% endif %}
+                             
                               <li><i class="fa fa-share-alt"></i></li>
 
                               <li><a href="#">Facebook</a>,</li>
@@ -48,18 +58,18 @@
                     </div>
                   </div>
                 </div>
-                <div class="col-lg-12">
+                <div class="col-lg-12 ">
                   <div class="sidebar-item comments">
                     <div class="sidebar-heading">
                       <h2>{{blog.blog_comment.count}} comments</h2>
                     </div>
-                    <div class="content">
+                    <div class="content sm-">
                       <ul>
                         {% for comment  in blog.blog_comment.all  %}
                         <li>
                           <div class="author-thumb">
                             {% for picture in  comment.user.profile_user.all %}
-                            <img src="{{picture.get_profile_picture}}" alt="{{picture.user.username}}">
+                            <img src="{{picture.get_profile_picture}}" style="border: 1px solid #fff; border-radius: 50%;" alt="{{picture.user.username}}">
                             {% endfor %}
                           </div>
                           <div class="right-content">
@@ -71,7 +81,7 @@
                                 <div class="row">
                                   <div class="col-lg-12">
                                     <fieldset>
-                                      <textarea name="text" rows="6" id="message" placeholder="Type your replay" required="" style="    height: 81px; width: 30rem"></textarea>
+                                      <textarea name="text" rows="6" id="replay" class="form-control my-2 " placeholder="Type your replay" required="" ></textarea>
                                     </fieldset>
                                   </div>
                                   <div class="col-lg-12">
@@ -92,7 +102,7 @@
                         <li class="replied">
                           <div class="author-thumb">
                             {% for picture in  replay.user.profile_user.all %}
-                            <img src="{{picture.get_profile_picture}}" alt="">
+                            <img style="border: 1px solid #fff; border-radius: 50%;" src="{{picture.get_profile_picture}}" alt="">
                             {% endfor %}
                           </div>
                           <div class="right-content">

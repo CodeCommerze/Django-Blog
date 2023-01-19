@@ -59,7 +59,7 @@ class Comment(models.Model):
     created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return  self.user.username
+        return  self.comment
 
 class Replay(models.Model):
     user = models.ForeignKey(User, related_name="replay_user" , on_delete=models.CASCADE)
