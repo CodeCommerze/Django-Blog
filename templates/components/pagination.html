@@ -1,0 +1,17 @@
+<ul class="page-numbers">
+    {% if page_obj.has_previous %}
+    <li><a href="?page={{page_obj.previous_page_number}}"><i class="fa fa-angle-double-left"></i></a></li>
+    {% endif %}
+    {% for paginator in page_obj.paginator.page_range  %}
+    {% if page_obj.number == paginator %}
+    <li class="active"><a href="?page={{paginator}}">{{paginator}}</a></li>
+    {% else %}
+    <li ><a href="?page={{paginator}}">{{paginator}}</a></li>
+    {% endif %}
+    {% endfor %}
+    
+
+    {% if page_obj.has_next %}
+    <li><a href="?page={{page_obj.next_page_number}}"><i class="fa fa-angle-double-right"></i></a></li>
+    {% endif %}
+  </ul>

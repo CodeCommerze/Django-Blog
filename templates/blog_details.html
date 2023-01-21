@@ -1,0 +1,156 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- Page Content -->
+ 
+
+
+    <section class="blog-posts grid-system">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8">
+            <div class="all-blog-posts">
+              <div class="row">
+                <div class="col-lg-12">
+                  <div class="blog-post">
+                    <div class="blog-thumb">
+                      <img src="{{blog.image.url}}" alt="">
+                    </div>
+                    <div class="down-content">
+                      <span>{{blog.Category}}</span>
+                      <a ><h4>{{blog.name}}</h4></a>
+                      <ul class="post-info">
+                        <li><a href="#">{{blog.author}}</a></li>
+                        <li><a href="#">{{blog.created}}</a></li>
+                        <li><a href="#">{{blog.blog_comment.count}} Comments</a></li>
+                      </ul>
+                      <p>{{blog.description}}</p>
+                      <div class="post-options">
+                        <div class="row">
+                          <div class="col-6">
+                            <ul class="post-tags">
+                              <li><i class="fa fa-tags"></i></li>
+                              <li><a href="#">Best Templates</a>,</li>
+                              <li><a href="#">TemplateMo</a></li>
+                            </ul>
+                          </div>
+                          <div class="col-6">
+                            <ul class="post-share">
+                              <li id='like-count'>{{blog.likes.count}}</li>
+                              {% if request.user.is_authenticated %}
+                              {% if liked %}
+                              <li><i  id='like-icon' data-blog="{{blog.id}}"class="fa fa-heart heart-color"></i></li>
+                              {% else %}
+                              <li><i  id='like-icon' data-blog="{{blog.id}}"class="fa fa-heart default-color"></i></li>
+                              {% endif %}
+                              {% else %}
+                              <a href="{% url 'login' %}"><li><i  class="fa fa-heart heart-color" ></i></li></a>
+                              {% endif %}
+                             
+                              <li><i class="fa fa-share-alt"></i></li>
+
+                              <li><a href="#">Facebook</a>,</li>
+                              <li><a href="#"> Twitter</a></li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-12 ">
+                  <div class="sidebar-item comments">
+                    <div class="sidebar-heading">
+                      <h2>{{blog.blog_comment.count}} comments</h2>
+                    </div>
+                    <div class="content sm-">
+                      <ul>
+                        {% for comment  in blog.blog_comment.all  %}
+                        <li>
+                          <div class="author-thumb">
+                            {% for picture in  comment.user.profile_user.all %}
+                            <img src="{{picture.get_profile_picture}}" style="border: 1px solid #fff; border-radius: 50%;" alt="{{picture.user.username}}">
+                            {% endfor %}
+                          </div>
+                          <div class="right-content">
+                            <h4>{{comment.user.username}}<span>{{comment.created}}</span></h4>
+                            <p>{{comment.comment}}</p>
+                            <div class="content">
+                              <form id="comment" action="{% url 'replay' blog.slug comment.pk %}" method="post">
+                                {% csrf_token %}
+                                <div class="row">
+                                  <div class="col-lg-12">
+                                    <fieldset>
+                                      <textarea name="text" rows="6" id="replay" class="form-control my-2 " placeholder="Type your replay" required="" ></textarea>
+                                    </fieldset>
+                                  </div>
+                                  <div class="col-lg-12">
+                                    <fieldset>
+                                      {% if request.user.is_authenticated %}
+                                      <button type="submit" id="form-submit" class="main-button" >Submit</button>
+                                      {% else %}
+                                      <a href="{% url 'login' %}"type="button" id="form-submit" class="main-button">Login</a>
+                                      {% endif %}
+                                    </fieldset>
+                                  </div>
+                                </div>
+                              </form>
+                            </div>
+                          </div>
+                        </li>
+                        {% for replay in comment.replay_comment.all  %}
+                        <li class="replied">
+                          <div class="author-thumb">
+                            {% for picture in  replay.user.profile_user.all %}
+                            <img style="border: 1px solid #fff; border-radius: 50%;" src="{{picture.get_profile_picture}}" alt="">
+                            {% endfor %}
+                          </div>
+                          <div class="right-content">
+                            <h4>{{replay.user.username}}<span>{{replay.created}}</span></h4>
+                            <p>{{replay.text}}</p>
+                          </div>
+                        </li>
+                        {% endfor %}
+                        {% endfor %}
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-12">
+                  <div class="sidebar-item submit-comment">
+                    <div class="sidebar-heading">
+                      <h2>Your comment</h2>
+                    </div>
+                    <div class="content">
+                      <form id="comment" action="{% url 'blog_details' slug=blog.slug %}" method="post">
+                        {% csrf_token %}
+                        <div class="row">
+                          <div class="col-lg-12">
+                            <fieldset>
+                              <textarea name="text" rows="6" id="message" placeholder="Type your comment" required="" style="height:81px"></textarea>
+                            </fieldset>
+                          </div>
+                          <div class="col-lg-12">
+                            <fieldset>
+                              {% if request.user.is_authenticated %}
+                              <button type="submit" id="form-submit" class="main-button" >Submit</button>
+                              {% else %}
+                              <a href="{% url 'login' %}"type="button" id="form-submit" class="main-button">Login</a>
+                              {% endif %}
+                            </fieldset>
+                          </div>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!---sidebar-->
+          {% include 'components/sidebar.html' %}
+        </div>
+      </div>
+    </section>
+
+{% endblock content %}
